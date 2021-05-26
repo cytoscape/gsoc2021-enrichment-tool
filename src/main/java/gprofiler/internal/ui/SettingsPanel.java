@@ -34,6 +34,9 @@ public class SettingsPanel extends JPanel {
      */
     private JTextField organismNameField;
     private final CySwingAppAdapter adapter;
+    /**
+     * Button to run the Profiler by firing API Request
+     */
     private JButton runProfilerButton;
     private final SynchronousTaskManager<?> taskManager;
 
