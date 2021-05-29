@@ -16,6 +16,29 @@ import java.lang.reflect.Type;
 public class HTTPRequests {
     private final String USER_AGENT = "Mozilla/5.0";
     private final String basicURL = "https://biit.cs.ut.ee/gprofiler/api/";
+    HashMap<String,String> defaultParameters;
+
+    public HTTPRequests(){
+        /**
+         * Initializing default parameters
+         * Reference for values: https://github.com/PathwayCommons/app-ui/blob/master/src/server/external-services/gprofiler/gprofiler.js
+         */
+        defaultParameters = new HashMap<>();
+        defaultParameters.put("organism",new String("hsapiens"));
+        defaultParameters.put("sources","['GO:BP', 'REAC']");
+        defaultParameters.put("user_threshold","0.05");
+        defaultParameters.put("all_results","false");
+        defaultParameters.put("ordered","false");
+        defaultParameters.put("combined", "false");
+        defaultParameters.put("measure_underrepresentation", "false");
+        defaultParameters.put("no_iea", "false");
+        defaultParameters.put("domain_scope","annotated");
+        defaultParameters.put("numeric_ns","ENTREZGENE_ACC");
+        defaultParameters.put("significance_threshold_method","g_SCS");
+        defaultParameters.put("background","[]");
+        defaultParameters.put("no_evidences", "false");
+
+    }
     public HttpResponse<String> makePostRequest(String endpoint , Map<String,String> parameters) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         StringBuffer urlConverter = new StringBuffer();
