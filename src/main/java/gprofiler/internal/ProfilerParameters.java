@@ -5,7 +5,9 @@ import java.util.HashSet;
 public class ProfilerParameters {
     public void setSelectedNodes(HashSet<String> selectedNodeNamesFromNetwork) {
     }
+    public HashSet<String> getSelectedNodes(){
 
+    }
     public void setAllNodes(HashSet allNamesFromNetwork) {
     }
 

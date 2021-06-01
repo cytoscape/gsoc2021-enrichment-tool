@@ -37,14 +37,43 @@ public class SettingsPanelActionListener implements ActionListener {
         startNetwork = startNetworkView.getModel();
         final CyNetwork network = adapter.getCyApplicationManager().getCurrentNetwork();
         params.setSelectedNodes(getSelectedNodeNamesFromNetwork(network));
-        params.setAllNodes(getAllNamesFromNetwork(network));
-        params.setSelectedNodes(getAllCanonicalNamesFromTextInput());
+        params.setSelectedNodes((HashSet<String>) getSelectedNamesFromTextInput());
+        Set<String> selectedNodes = params.getSelectedNodes();
+
+        StringBuffer query = new StringBuffer();
+        Iterator<String> setIterator = selectedNodes.iterator();
+        while(setIterator.hasNext()){
+            query.append("\"");
+            query.append(setIterator.next());
+            query.append("\"");
+            if(setIterator.hasNext()){
+                query.append(",");
+            }
+        }
         //run the query
+        Map<String,String> parameters = generateQuery(query.toString());
         root.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
-    private Set<String> getSelectedNamesFromTextArea() {
+    private Map<String, String> generateQuery(String query) {
+        HashMap<String,String> parameters = new HashMap<>();
+        parameters.put("query",query);
+        return parameters;
     }
+
+    private Set<String> getSelectedNamesFromTextInput() {
+        String textNodes = params.getTextInput();
+        String[] nodes = textNodes.split("\\s+");
+
+        Set canonicalNameVector = new HashSet();
+        for (int i = 0; i < nodes.length; i++) {
+            if (nodes[i] != null && nodes[i].length() != 0 && !canonicalNameVector.contains(nodes[i].toUpperCase())) {
+                canonicalNameVector.add(nodes[i].toUpperCase());
+            }
+        }
+        return (HashSet) canonicalNameVector;
+
+   }
 
     private boolean updateRequestBody(){
         return true;
@@ -87,19 +116,19 @@ public class SettingsPanelActionListener implements ActionListener {
         }
         return (HashSet) canonicalNameVector;
     }
-    /**
-     * @description get canonical names from the text area
-     */
-    public HashSet getAllCanonicalNamesFromTextInput(CyNetwork network){
-        String textNodes = params.getTextInput();
-        String[] nodes = textNodes.split("\\s+");
-
-        Set canonicalNameVector = new HashSet();
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i] != null && nodes[i].length() != 0 && !canonicalNameVector.contains(nodes[i].toUpperCase())) {
-                canonicalNameVector.add(nodes[i].toUpperCase());
-            }
-        }
-        return (HashSet) canonicalNameVector;
-    }
+//    /**
+//     * @description get canonical names from the text area
+//     */
+//    public HashSet getAllCanonicalNamesFromTextInput(CyNetwork network){
+//        String textNodes = params.getTextInput();
+//        String[] nodes = textNodes.split("\\s+");
+//
+//        Set canonicalNameVector = new HashSet();
+//        for (int i = 0; i < nodes.length; i++) {
+//            if (nodes[i] != null && nodes[i].length() != 0 && !canonicalNameVector.contains(nodes[i].toUpperCase())) {
+//                canonicalNameVector.add(nodes[i].toUpperCase());
+//            }
+//        }
+//        return (HashSet) canonicalNameVector;
+//    }
 }
