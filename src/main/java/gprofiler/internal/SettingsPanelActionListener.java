@@ -21,10 +21,12 @@ public class SettingsPanelActionListener implements ActionListener {
     private CyNetwork startNetwork;
     private final SynchronousTaskManager<?> taskManager;
     ProfilerParameters params;
-    public SettingsPanelActionListener(SettingsPanel settingsPanel, final CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager){
+    boolean isSelected;
+    public SettingsPanelActionListener(SettingsPanel settingsPanel, final CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager, boolean isSelected){
         this.adapter = adapter;
         this.settingsPanel = settingsPanel;
         this.taskManager = taskManager;
+        this.isSelected = isSelected;
     }
     /**
      * @description action that is performed when the "Run gProfiler" button is pressed
@@ -36,7 +38,15 @@ public class SettingsPanelActionListener implements ActionListener {
         startNetworkView = adapter.getCyApplicationManager().getCurrentNetworkView();
         startNetwork = startNetworkView.getModel();
         final CyNetwork network = adapter.getCyApplicationManager().getCurrentNetwork();
-        params.setSelectedNodes(getSelectedNodeNamesFromNetwork(network));
+        if(this.isSelected) {
+            //run the profiler only on selected nodes
+            params.setSelectedNodes(getSelectedNodeNamesFromNetwork(network));
+
+        } else{
+            // run the profiler for all nodes
+            params.setSelectedNodes(getAllNamesFromNetwork(network));
+
+        }
         params.setSelectedNodes((HashSet<String>) getSelectedNamesFromTextInput());
         Set<String> selectedNodes = params.getSelectedNodes();
 

@@ -7,6 +7,7 @@ import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
@@ -68,7 +69,6 @@ public class HTTPRequests {
                 .header("accept","application/json")
                 .uri(URI.create(url))
                 .build();
-        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
-        return response;
+        return request;
     }
 };
