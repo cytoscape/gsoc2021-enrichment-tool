@@ -118,14 +118,12 @@ public class SettingsPanel extends JPanel {
 
         // JLabels
         speciesLabel = new JLabel("Species: ");
-        //speciesNameField = new JTextField("hsapiens"); // set default value to Homo sapiens
         HTTPRequests request = new HTTPRequests();
         HttpResponse<String> response  = request.makeGetRequests("organisms_list");
         // stores the species mapping
         String responseBody = response.body();
         Gson gson = new Gson();
         SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
-
         this.speciesNameField = new AutoCompleteComboBox(speciesData);
         this.speciesNameField.setVisible(true);
         // make the combo box

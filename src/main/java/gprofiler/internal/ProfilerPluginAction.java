@@ -2,6 +2,7 @@ package gprofiler.internal;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -32,7 +33,14 @@ public class ProfilerPluginAction extends AbstractCyAction {
      */
     public void actionPerformed(ActionEvent event){
         final JFrame window = new JFrame(WINDOW_TITLE);
-        final SettingsPanel settingsPanel = new SettingsPanel(adapter,taskManager);
+        SettingsPanel settingsPanel = null;
+        try {
+            settingsPanel = new SettingsPanel(adapter,taskManager);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         window.getContentPane().add(settingsPanel);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.pack();
