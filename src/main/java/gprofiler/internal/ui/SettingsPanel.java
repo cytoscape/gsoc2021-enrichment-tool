@@ -40,7 +40,7 @@ public class SettingsPanel extends JPanel {
     /**
      * User enters species name to this text field
      */
-    private JTextField speciesNameField;
+    private JComboBox<String>  speciesNameField;
     private final CySwingAppAdapter adapter;
     /**
      * Button to run the Profiler by firing API Request
@@ -54,7 +54,7 @@ public class SettingsPanel extends JPanel {
      * Stores path details of file
      */
     private JTextField filePathTextField;
-    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
+    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) throws IOException, InterruptedException {
         this.adapter = adapter;
         this.props = new Properties();
         initialiseJComponents();
@@ -118,7 +118,7 @@ public class SettingsPanel extends JPanel {
 
         // JLabels
         speciesLabel = new JLabel("Species: ");
-        speciesNameField = new JTextField("hsapiens"); // set default value to Homo sapiens
+        //speciesNameField = new JTextField("hsapiens"); // set default value to Homo sapiens
         HTTPRequests request = new HTTPRequests();
         HttpResponse<String> response  = request.makeGetRequests("organisms_list");
         // stores the species mapping
@@ -126,15 +126,8 @@ public class SettingsPanel extends JPanel {
         Gson gson = new Gson();
         SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
 
-        final JComboBox<String> speciesName = new JComboBox<String>();
-        int defaultIndex=0;
-        for(int i=0;i<speciesData.length;i++){
-            speciesName.addItem(speciesData[i].getDisplay_name());
-            if(speciesData[i].getDisplay_name().equals("Homo sapiens")){
-                defaultIndex = i;
-            }
-        }
-        speciesName.setSelectedIndex(defaultIndex);
+        this.speciesNameField = new AutoCompleteComboBox(speciesData);
+        this.speciesNameField.setVisible(true);
         // make the combo box
         // runProfilerButton
         runProfilerButton = new JButton("Run g:Profiler");
