@@ -1,6 +1,6 @@
 package gprofiler.internal;
 
-import gprofiler.internal.ui.SettingsPanel;
+import gprofiler.internal.ui.QuickOptionsPanel;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNode;
@@ -14,20 +14,23 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class SettingsPanelActionListener implements ActionListener {
+public class EnrichmentTableActionListener implements ActionListener  {
     private final CySwingAppAdapter adapter;
-    private SettingsPanel settingsPanel;
+    private QuickOptionsPanel quickOptionsPanel;
     private CyNetworkView startNetworkView;
     private CyNetwork startNetwork;
     private final SynchronousTaskManager<?> taskManager;
     ProfilerParameters params;
     boolean isSelected;
-    public SettingsPanelActionListener(SettingsPanel settingsPanel, final CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager, boolean isSelected){
+    public EnrichmentTableActionListener(QuickOptionsPanel quickOptionsPanel, final CySwingAppAdapter adapter, final SynchronousTaskManager<?> taskManager, boolean isSelected){
         this.adapter = adapter;
-        this.settingsPanel = settingsPanel;
+        this.quickOptionsPanel = quickOptionsPanel;
         this.taskManager = taskManager;
         this.isSelected = isSelected;
     }
+    /**
+     * To Be done: Handle situations where customer would like to visualize results
+     */
     /**
      * @description action that is performed when the "Run gProfiler" button is pressed
      */
@@ -83,7 +86,7 @@ public class SettingsPanelActionListener implements ActionListener {
         }
         return (HashSet) canonicalNameVector;
 
-   }
+    }
 
     private boolean updateRequestBody(){
         return true;
@@ -94,7 +97,7 @@ public class SettingsPanelActionListener implements ActionListener {
      */
     public HashSet<String> getSelectedNodeNamesFromNetwork(CyNetwork network){
         Set<String> canonicalNameVector = new HashSet<String>();
-        final List<CyNode> nodes = network.getNodeList();
+        final java.util.List<CyNode> nodes = network.getNodeList();
         for(CyNode node: nodes){
             if (network.getDefaultNodeTable().getRow(node.getSUID()).get(CyNetwork.SELECTED, Boolean.class) == false)
                 continue;
@@ -126,19 +129,4 @@ public class SettingsPanelActionListener implements ActionListener {
         }
         return (HashSet) canonicalNameVector;
     }
-//    /**
-//     * @description get canonical names from the text area
-//     */
-//    public HashSet getAllCanonicalNamesFromTextInput(CyNetwork network){
-//        String textNodes = params.getTextInput();
-//        String[] nodes = textNodes.split("\\s+");
-//
-//        Set canonicalNameVector = new HashSet();
-//        for (int i = 0; i < nodes.length; i++) {
-//            if (nodes[i] != null && nodes[i].length() != 0 && !canonicalNameVector.contains(nodes[i].toUpperCase())) {
-//                canonicalNameVector.add(nodes[i].toUpperCase());
-//            }
-//        }
-//        return (HashSet) canonicalNameVector;
-//    }
 }

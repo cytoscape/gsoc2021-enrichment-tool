@@ -2,16 +2,15 @@ package gprofiler.internal.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.Properties;
 
-public class GraphPanel extends JPanel implements ActionListener {
-    private JRadioButton graphButton;
+public class GraphPanel extends JPanel implements ItemListener {
+    private JCheckBox graphButton;
     private boolean selectedOnly;
     private static String graphLabel = "Get gene list from selected network cluster";
     private Properties props;
+
     public GraphPanel(boolean selectedOnly){
         this.selectedOnly = selectedOnly;
         this.props = new Properties();
@@ -30,7 +29,7 @@ public class GraphPanel extends JPanel implements ActionListener {
     }
 
     private void initialiseJComponents(boolean selectedOnly){
-        graphButton = new JRadioButton(graphLabel);
+        graphButton = new JCheckBox(graphLabel);
         graphButton.setBorder(BorderFactory.createEmptyBorder());
         graphButton.setEnabled(this.selectedOnly);
         graphButton.setMnemonic(KeyEvent.VK_N);
@@ -39,8 +38,7 @@ public class GraphPanel extends JPanel implements ActionListener {
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(graphButton);
         //register a listener for the radio buttons
-        graphButton.addActionListener(this);
-
+        graphButton.addItemListener(this);
     }
 
 
@@ -53,13 +51,9 @@ public class GraphPanel extends JPanel implements ActionListener {
         return graphButton.isSelected();
     }
 
-
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals(graphLabel)){
+    public void itemStateChanged(ItemEvent e) {
             // update if the node has been selected or not
-//            this.props.setProperty("selected_graph",(graphButton.isSelected()));
             this.selectedOnly = graphButton.isSelected();
-        }
     }
 }

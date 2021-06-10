@@ -57,7 +57,7 @@ public class HTTPRequests {
         HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
         return response;
     }
-    public HttpResponse<String> makeGetRequests(String endpoint) throws IOException,InterruptedException {
+    public HttpResponse<String> makeGetRequests(String endpoint) {
         //fetches data using a specific api endpoint
         HttpClient client = HttpClient.newHttpClient();
         StringBuffer urlConverter = new StringBuffer();
@@ -69,6 +69,6 @@ public class HTTPRequests {
                 .header("accept","application/json")
                 .uri(URI.create(url))
                 .build();
-        return request;
+        return (HttpResponse<String>) request;
     }
 };

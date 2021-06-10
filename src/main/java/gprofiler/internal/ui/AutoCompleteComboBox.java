@@ -11,12 +11,12 @@ import java.awt.event.KeyEvent;
 public class AutoCompleteComboBox extends JComboBox {
     public int caretPosition = 0;
     public JTextField tfield = null;
-    public AutoCompleteComboBox(final SpeciesData species[]) {
+    public AutoCompleteComboBox(final SpeciesData species[], String defaultSpeciesName) {
         super(species);
         int defaultIndex =0;
         //by default set species to humans
         for(int i=0;i< species.length;i++){
-            if(species[i].getDisplay_name().equals("Homo sapiens")){
+            if(species[i].getDisplay_name().equals(defaultSpeciesName)){
                 defaultIndex = i;
             }
         }

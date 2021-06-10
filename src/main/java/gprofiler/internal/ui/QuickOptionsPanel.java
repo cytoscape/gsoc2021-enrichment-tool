@@ -1,14 +1,10 @@
 package gprofiler.internal.ui;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import gprofiler.internal.HTTPRequests.HTTPRequests;
-import gprofiler.internal.SettingsPanelActionListener;
+import gprofiler.internal.ProfilerParameters;
+import gprofiler.internal.QuickOptionsPanelActionListener;
 import gprofiler.internal.SpeciesData;
-import org.cytoscape.app.swing.CySwingAppAdapter;
-import org.cytoscape.work.SynchronousTaskManager;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -22,48 +18,59 @@ import java.awt.event.KeyEvent;
  * @description Asks users to add the basic Settings for the project: We will assume as many parameters to be default as poosible with minimal room for adjusting preferences
  * This panel allows users to enter data that would then be used along with decisions on running as ordered or multiquery
  */
-public class SettingsPanel extends JPanel {
+public class QuickOptionsPanel extends JPanel {
+
     /**
      * the height of the panel
      */
     private static final int DIM_HEIGHT = 800;
+
     /**
      * the width of the panel
      */
     private static final int DIM_WIDTH = 550;
+
     /**
      * Panel for text or graph input
      */
     private GraphPanel graphPanel; // need to figure out how to handle it
 
     private JLabel speciesLabel;
+
     /**
      * User enters species name to this text field
      */
     private JComboBox<String>  speciesNameField;
-    private final CySwingAppAdapter adapter;
-    /**
-     * Button to run the Profiler by firing API Request
-     */
-    private JButton runProfilerButton;
-    private final SynchronousTaskManager<?> taskManager;
 
-    private Properties props;
-    //private JLabel filePathLabel;
     /**
-     * Stores path details of file
+     * Save quick option settings
      */
-    private JTextField filePathTextField;
-    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) throws IOException, InterruptedException {
-        this.adapter = adapter;
-        this.props = new Properties();
+    private JButton saveSettingsButton;
+
+    private boolean isSelected;
+
+    private String profilerDirectory;
+    private ProfilerParameters params;
+    private Properties gProfilerProps;
+
+    public QuickOptionsPanel(final String profilerDirectory) {
+        this.profilerDirectory = profilerDirectory;
+        try{
+            params = new ProfilerParameters(this.profilerDirectory);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error opening the properties file." + "\n"
+                    + "Please make sure that there is gprofiler_gui.properties file" + "\n"
+                    + "in the gprofiler.jar or in your cytoscape plugins directory.");
+        }
+        this.gProfilerProps = params.getProfilerProps();
+
+        //initialize JComponent
         initialiseJComponents();
-        this.taskManager = taskManager;
         setPreferredSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
         setOpaque(false);
         // create border.
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "gProfiler settings", 0, 0,
-                new Font("gProfiler settings", Font.BOLD, 16), Color.black));
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Quick Options", 0, 0,
+                new Font("Quick Options", Font.BOLD, 16), Color.black));
 
 
         GridBagLayout gridBag = new GridBagLayout();
@@ -102,16 +109,16 @@ public class SettingsPanel extends JPanel {
         gridBag.setConstraints(graphPanel, gridBagConstraints);
         add(graphPanel);
 
-        gridBag.setConstraints(runProfilerButton,gridBagConstraints);
-        add(runProfilerButton);
+        gridBag.setConstraints(saveSettingsButton,gridBagConstraints);
+        add(saveSettingsButton);
 
     }
 
     /**
      * textOrGraphPanel for choosing between text or graph based input
      */
-    private void initialiseJComponents() throws IOException, InterruptedException {
-        final boolean isSelected = Boolean.parseBoolean(this.props.getProperty("selected_graph"));
+    private void initialiseJComponents() {
+         isSelected = Boolean.parseBoolean(this.gProfilerProps.getProperty("selected_graph"));
 
         // TextOrGraphPanel: should be set by default to text input
         graphPanel = new GraphPanel(isSelected);
@@ -124,14 +131,30 @@ public class SettingsPanel extends JPanel {
         String responseBody = response.body();
         Gson gson = new Gson();
         SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
-        this.speciesNameField = new AutoCompleteComboBox(speciesData);
+        String defaultSpeciesName = this.gProfilerProps.getProperty("species_name");
+        this.speciesNameField = new AutoCompleteComboBox(speciesData,defaultSpeciesName);
         this.speciesNameField.setVisible(true);
+        this.speciesNameField.setSelectedItem(defaultSpeciesName);
         // make the combo box
-        // runProfilerButton
-        runProfilerButton = new JButton("Run g:Profiler");
-        runProfilerButton.setMnemonic(KeyEvent.VK_B);
-        runProfilerButton.addActionListener(new SettingsPanelActionListener(this, adapter,taskManager,isSelected));
+        // saveSettingsButton
+        saveSettingsButton = new JButton("Save Settings");
+        saveSettingsButton.setMnemonic(KeyEvent.VK_B);
+        saveSettingsButton.addActionListener(new QuickOptionsPanelActionListener(this));
     }
 
+    public String getSelectedModeEnabled(){
+        return String.valueOf(this.isSelected);
+    }
 
+    public String getSelectedSpeciesName(){
+        return this.speciesNameField.getSelectedItem().toString();
+    }
+
+    public Properties getgProfilerProps(){
+        return gProfilerProps;
+    }
+
+    public ProfilerParameters getParams() {
+        return params;
+    }
 }

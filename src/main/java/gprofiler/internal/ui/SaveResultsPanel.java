@@ -1,7 +1,9 @@
 package gprofiler.internal.ui;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 /**
@@ -11,6 +13,15 @@ import java.awt.event.ItemListener;
  * that needs to be saved.
  */
 public class SaveResultsPanel extends JPanel implements ItemListener, ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
+    }
     /**
      *
      */
