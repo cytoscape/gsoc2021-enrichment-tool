@@ -1,12 +1,15 @@
 package gprofiler.internal.ui;
 
 import org.cytoscape.app.swing.CySwingAppAdapter;
+import org.cytoscape.model.CyNetwork;
+import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.work.SynchronousTaskManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * It generates an enrichment table. Also allows users to
@@ -36,7 +39,7 @@ public class EnrichmentTablePanel extends JPanel implements ActionListener {
         /**
          * Table Model
          */
-
+      //  EnrichmentTableModel nodeTable = new EnrichmentTableModel(canonicalNameVector,currentNetwork,currentNetworkview, CySwingAppAdapter adapter);
     }
 
     @Override
