@@ -1,18 +1,8 @@
 package gprofiler.internal.ui;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import gprofiler.internal.HTTPRequests.HTTPRequests;
 import gprofiler.internal.SettingsPanelActionListener;
-import gprofiler.internal.SpeciesData;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.work.SynchronousTaskManager;
-
-import java.io.IOException;
-import java.net.http.HttpResponse;
-import java.util.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,32 +21,19 @@ public class SettingsPanel extends JPanel {
      * the width of the panel
      */
     private static final int DIM_WIDTH = 550;
-    /**
-     * Panel for text or graph input
-     */
-    private GraphPanel graphPanel; // need to figure out how to handle it
-
-    private JLabel speciesLabel;
-    /**
-     * User enters species name to this text field
-     */
-    private JComboBox<String>  speciesNameField;
     private final CySwingAppAdapter adapter;
     /**
      * Button to run the Profiler by firing API Request
      */
     private JButton runProfilerButton;
     private final SynchronousTaskManager<?> taskManager;
-
-    private Properties props;
-    //private JLabel filePathLabel;
+    public JTextArea outputTextBox;
     /**
      * Stores path details of file
      */
     private JTextField filePathTextField;
-    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) throws IOException, InterruptedException {
+    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
         this.adapter = adapter;
-        this.props = new Properties();
         initialiseJComponents();
         this.taskManager = taskManager;
         setPreferredSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
@@ -90,18 +67,11 @@ public class SettingsPanel extends JPanel {
         gridBagConstraints.gridwidth = GridBagConstraints.RELATIVE;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 
-        gridBag.setConstraints(speciesLabel, gridBagConstraints);
-        add(speciesLabel);
-
-        gridBag.setConstraints(speciesNameField, gridBagConstraints);
-        add(speciesNameField);
-
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.gridheight = 1;
         gridBagConstraints.weighty = 100;
-        gridBag.setConstraints(graphPanel, gridBagConstraints);
-        add(graphPanel);
-
+        gridBag.setConstraints(outputTextBox, gridBagConstraints);
+        add(outputTextBox);
         gridBag.setConstraints(runProfilerButton,gridBagConstraints);
         add(runProfilerButton);
 
@@ -110,29 +80,17 @@ public class SettingsPanel extends JPanel {
     /**
      * textOrGraphPanel for choosing between text or graph based input
      */
-    private void initialiseJComponents() throws IOException, InterruptedException {
-        final boolean isSelected = Boolean.parseBoolean(this.props.getProperty("selected_graph"));
-
-        // TextOrGraphPanel: should be set by default to text input
-        graphPanel = new GraphPanel(isSelected);
-
-        // JLabels
-        speciesLabel = new JLabel("Species: ");
-        //speciesNameField = new JTextField("hsapiens"); // set default value to Homo sapiens
-        HTTPRequests request = new HTTPRequests();
-        HttpResponse<String> response  = request.makeGetRequests("organisms_list");
-        // stores the species mapping
-        String responseBody = response.body();
-        Gson gson = new Gson();
-        SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
-
-        this.speciesNameField = new AutoCompleteComboBox(speciesData);
-        this.speciesNameField.setVisible(true);
-        // make the combo box
+    private void initialiseJComponents(){
         // runProfilerButton
         runProfilerButton = new JButton("Run g:Profiler");
         runProfilerButton.setMnemonic(KeyEvent.VK_B);
-        runProfilerButton.addActionListener(new SettingsPanelActionListener(this, adapter,taskManager,isSelected));
+        runProfilerButton.addActionListener(new SettingsPanelActionListener(this, adapter,taskManager,false));
+        outputTextBox = new JTextArea("");
+        // add a textbox which will display the results of firing a query
+
+    }
+    public JTextArea getOutputTextBox(){
+        return outputTextBox;
     }
 
 

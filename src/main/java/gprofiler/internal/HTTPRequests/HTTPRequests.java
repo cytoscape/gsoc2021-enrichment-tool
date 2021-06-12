@@ -1,21 +1,21 @@
 package gprofiler.internal.HTTPRequests;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 
 /**
  * For handling API requests to gProfiler
  */
 public class HTTPRequests {
-    private final String USER_AGENT = "Mozilla/5.0";
     private final String basicURL = "https://biit.cs.ut.ee/gprofiler/api/";
     HashMap<String,String> defaultParameters;
 
@@ -40,6 +40,7 @@ public class HTTPRequests {
         defaultParameters.put("no_evidences", "false");
 
     }
+
     public HttpResponse<String> makePostRequest(String endpoint , Map<String,String> parameters) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         StringBuffer urlConverter = new StringBuffer();
@@ -49,6 +50,7 @@ public class HTTPRequests {
         Gson gson = new Gson();
         Type gsonType = new TypeToken<HashMap>(){}.getType();
         String jsonBody = gson.toJson(parameters,gsonType);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type","application/json")
@@ -57,6 +59,7 @@ public class HTTPRequests {
         HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
         return response;
     }
+
     public HttpResponse<String> makeGetRequests(String endpoint) throws IOException,InterruptedException {
         //fetches data using a specific api endpoint
         HttpClient client = HttpClient.newHttpClient();
@@ -69,6 +72,8 @@ public class HTTPRequests {
                 .header("accept","application/json")
                 .uri(URI.create(url))
                 .build();
-        return request;
+        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        return response;
     }
 };
+
