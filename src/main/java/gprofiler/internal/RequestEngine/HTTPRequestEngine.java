@@ -11,8 +11,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
-import org.cytoscape.app.swing.CySwingAppAdapter;
-import org.cytoscape.work.SynchronousTaskManager;
 
 /**
  * For handling API requests to gProfiler
@@ -21,16 +19,12 @@ public class HTTPRequestEngine {
 
     private final String basicURL = "https://biit.cs.ut.ee/gprofiler/api/";
     HashMap<String,String> defaultParameters;
-    private final CySwingAppAdapter adapter;
-    private final SynchronousTaskManager<?> taskManager;
 
-    public HTTPRequestEngine(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager){
+    public HTTPRequestEngine(){
         /**
          * Initializing default parameters
          * Reference for values: https://github.com/PathwayCommons/app-ui/blob/master/src/server/external-services/gprofiler/gprofiler.js
          */
-        this.adapter = adapter;
-        this.taskManager = taskManager;
         defaultParameters = new HashMap<>();
         defaultParameters.put("organism",new String("hsapiens"));
         defaultParameters.put("sources","['GO:BP', 'REAC']");

@@ -2,35 +2,27 @@ package gprofiler.internal;
 
 import gprofiler.internal.RequestEngine.HTTPRequestEngine;
 import gprofiler.internal.ui.SettingsPanel;
-import org.cytoscape.app.swing.CySwingAppAdapter;
-import org.cytoscape.model.CyNetwork;
-import org.cytoscape.view.model.CyNetworkView;
-import org.cytoscape.work.SynchronousTaskManager;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.http.HttpResponse;
 import java.util.*;
 
 public class SettingsPanelActionListener implements ActionListener {
-    private final CySwingAppAdapter adapter;
     private SettingsPanel settingsPanel;
-    private CyNetworkView startNetworkView;
-    private CyNetwork startNetwork;
-    private final SynchronousTaskManager<?> taskManager;
     boolean isSelected;
-    public SettingsPanelActionListener(SettingsPanel settingsPanel, final CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager, boolean isSelected){
-        this.adapter = adapter;
+    public SettingsPanelActionListener(SettingsPanel settingsPanel,  boolean isSelected){
         this.settingsPanel = settingsPanel;
-        this.taskManager = taskManager;
         this.isSelected = isSelected;
     }
     /**
      * @description action that is performed when the "Run gProfiler" button is pressed
      */
     public void actionPerformed(ActionEvent event){
-//        Component root  = SwingUtilities.getRoot((JButton)event.getSource());
-//        root.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Component root  = SwingUtilities.getRoot((JButton)event.getSource());
+        root.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Set<String> selectedNodes = new HashSet<>(){{
             add("CASQ2");
             add("CASQ1");
@@ -52,7 +44,7 @@ public class SettingsPanelActionListener implements ActionListener {
         //System.out.println(query);
         //run the query
         Map<String,String> parameters = generateQuery(query.toString());
-        HTTPRequestEngine requestEngine = new HTTPRequestEngine(adapter,taskManager);
+        HTTPRequestEngine requestEngine = new HTTPRequestEngine();
         HttpResponse<String> response = requestEngine.makePostRequest("gost/profile/",parameters);
         StringBuffer responseBuffer = new StringBuffer("");
         if(response!=null)
@@ -63,7 +55,7 @@ public class SettingsPanelActionListener implements ActionListener {
         //fire an api request with all the parameters
         //set value in a text box to show the json output
         settingsPanel.getOutputTextBox().setText(responseBuffer.toString());
-//        root.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        root.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     private Map<String, String> generateQuery(String query) {
