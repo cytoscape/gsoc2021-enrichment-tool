@@ -1,13 +1,11 @@
 package gprofiler.internal;
 
-import gprofiler.internal.RequestEngine.HTTPRequestEngine;
 import gprofiler.internal.ui.SettingsPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.http.HttpResponse;
 import java.util.*;
 
 public class SettingsPanelActionListener implements ActionListener {
@@ -44,17 +42,17 @@ public class SettingsPanelActionListener implements ActionListener {
         //System.out.println(query);
         //run the query
         Map<String,String> parameters = generateQuery(query.toString());
-        HTTPRequestEngine requestEngine = new HTTPRequestEngine();
-        HttpResponse<String> response = requestEngine.makePostRequest("gost/profile/",parameters);
+//        HTTPRequestEngine requestEngine = new HTTPRequestEngine();
+//        HttpResponse<String> response = requestEngine.makePostRequest("gost/profile/",parameters);
         StringBuffer responseBuffer = new StringBuffer("");
-        if(response!=null)
-            responseBuffer.append(response.body());
+//        if(response!=null)
+//            responseBuffer.append(response.body());
         //SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
 
         //response.body();
         //fire an api request with all the parameters
         //set value in a text box to show the json output
-        settingsPanel.getOutputTextBox().setText(responseBuffer.toString());
+        settingsPanel.getOutputTextBox().setText("responseBuffer.toString()");
         root.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
