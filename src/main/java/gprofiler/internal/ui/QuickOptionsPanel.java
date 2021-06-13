@@ -1,18 +1,17 @@
 package gprofiler.internal.ui;
 
-import com.google.gson.Gson;
-import gprofiler.internal.HTTPRequests.HTTPRequests;
+import gprofiler.internal.RequestEngine.HTTPRequestEngine;
 import gprofiler.internal.ProfilerParameters;
 import gprofiler.internal.QuickOptionsPanelActionListener;
+import gprofiler.internal.RequestEngine.HTTPRequestEngine;
 import gprofiler.internal.SpeciesData;
-
-import java.io.IOException;
-import java.net.http.HttpResponse;
-import java.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.util.Properties;
 
 /**
  * @description Asks users to add the basic Settings for the project: We will assume as many parameters to be default as poosible with minimal room for adjusting preferences
@@ -125,8 +124,8 @@ public class QuickOptionsPanel extends JPanel {
 
         // JLabels
         speciesLabel = new JLabel("Species: ");
-        HTTPRequests request = new HTTPRequests();
-        HttpResponse<String> response  = request.makeGetRequests("organisms_list");
+        HTTPRequestEngine request = new HTTPRequestEngine();
+        HttpResponse<String> response  = request.makePostRequest("organisms_list");
         // stores the species mapping
         String responseBody = response.body();
         Gson gson = new Gson();

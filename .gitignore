@@ -28,3 +28,4 @@ hs_err_pid*
 /.settings
 /.idea
 gprofiler-impl.iml
+/bin
