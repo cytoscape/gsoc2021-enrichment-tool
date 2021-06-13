@@ -1,4 +1,4 @@
-package gprofiler.internal.HTTPRequests;
+package gprofiler.internal.RequestEngine;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,19 +11,26 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
+import org.cytoscape.app.swing.CySwingAppAdapter;
+import org.cytoscape.work.SynchronousTaskManager;
 
 /**
  * For handling API requests to gProfiler
  */
-public class HTTPRequests {
+public class HTTPRequestEngine {
+
     private final String basicURL = "https://biit.cs.ut.ee/gprofiler/api/";
     HashMap<String,String> defaultParameters;
+    private final CySwingAppAdapter adapter;
+    private final SynchronousTaskManager<?> taskManager;
 
-    public HTTPRequests(){
+    public HTTPRequestEngine(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager){
         /**
          * Initializing default parameters
          * Reference for values: https://github.com/PathwayCommons/app-ui/blob/master/src/server/external-services/gprofiler/gprofiler.js
          */
+        this.adapter = adapter;
+        this.taskManager = taskManager;
         defaultParameters = new HashMap<>();
         defaultParameters.put("organism",new String("hsapiens"));
         defaultParameters.put("sources","['GO:BP', 'REAC']");
@@ -41,7 +48,7 @@ public class HTTPRequests {
 
     }
 
-    public HttpResponse<String> makePostRequest(String endpoint , Map<String,String> parameters) throws IOException, InterruptedException {
+    public HttpResponse<String> makePostRequest(String endpoint , Map<String,String> parameters) {
         HttpClient client = HttpClient.newHttpClient();
         StringBuffer urlConverter = new StringBuffer();
         urlConverter.append(this.basicURL);
@@ -56,11 +63,18 @@ public class HTTPRequests {
                 .header("Content-Type","application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                 .build();
-        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 
-    public HttpResponse<String> makeGetRequests(String endpoint) throws IOException,InterruptedException {
+    public HttpResponse<String> makeGetRequests(String endpoint) {
         //fetches data using a specific api endpoint
         HttpClient client = HttpClient.newHttpClient();
         StringBuffer urlConverter = new StringBuffer();
@@ -72,7 +86,14 @@ public class HTTPRequests {
                 .header("accept","application/json")
                 .uri(URI.create(url))
                 .build();
-        HttpResponse<String> response = client.send(request,HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = null;
+        try {
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 };
