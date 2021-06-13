@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * For handling API requests to gProfiler
+ * For handling API requests to gProfiler. The api firing request must be a task which is run on the task thread
  */
 public class HTTPRequestEngine {
 
