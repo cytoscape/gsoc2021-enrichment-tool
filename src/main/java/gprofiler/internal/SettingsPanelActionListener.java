@@ -2,17 +2,18 @@ package gprofiler.internal;
 
 import gprofiler.internal.RequestEngine.HTTPRequestEngine;
 import gprofiler.internal.ui.SettingsPanel;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.http.HttpResponse;
 import java.util.*;
-
 public class SettingsPanelActionListener implements ActionListener {
     private SettingsPanel settingsPanel;
     boolean isSelected;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SettingsPanelActionListener.class);
     public SettingsPanelActionListener(SettingsPanel settingsPanel,  boolean isSelected){
         this.settingsPanel = settingsPanel;
         this.isSelected = isSelected;
@@ -45,10 +46,13 @@ public class SettingsPanelActionListener implements ActionListener {
         //run the query
         Map<String,String> parameters = generateQuery(query.toString());
         HTTPRequestEngine requestEngine = new HTTPRequestEngine();
-        HttpResponse<String> response = requestEngine.makePostRequest("gost/profile/",parameters);
+        HttpResponse<String> response = null;
+        LOGGER.info("Reached here");
+        response = requestEngine.makePostRequest("gost/profile/",parameters);
         StringBuffer responseBuffer = new StringBuffer("");
         if(response!=null)
-            responseBuffer.append(response.body());
+            responseBuffer.append("Ran Query");
+        LOGGER.info(response.body());
         //SpeciesData[] speciesData = gson.fromJson(responseBody,SpeciesData[].class);
 
         //response.body();

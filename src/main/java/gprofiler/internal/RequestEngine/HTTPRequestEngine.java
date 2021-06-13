@@ -1,10 +1,7 @@
 package gprofiler.internal.RequestEngine;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import org.json.simple.JSONValue;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -48,10 +45,7 @@ public class HTTPRequestEngine {
         urlConverter.append(this.basicURL);
         urlConverter.append(endpoint);
         String url = urlConverter.toString();
-        Gson gson = new Gson();
-        Type gsonType = new TypeToken<HashMap>(){}.getType();
-        String jsonBody = gson.toJson(parameters,gsonType);
-
+        String jsonBody = JSONValue.toJSONString(parameters);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type","application/json")
@@ -60,32 +54,7 @@ public class HTTPRequestEngine {
         HttpResponse<String> response = null;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
-
-    public HttpResponse<String> makeGetRequests(String endpoint) {
-        //fetches data using a specific api endpoint
-        HttpClient client = HttpClient.newHttpClient();
-        StringBuffer urlConverter = new StringBuffer();
-        urlConverter.append(this.basicURL);
-        urlConverter.append(endpoint);
-        String url = urlConverter.toString();
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .header("accept","application/json")
-                .uri(URI.create(url))
-                .build();
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
         return response;
