@@ -32,7 +32,7 @@ public class ProfilerPluginAction extends AbstractCyAction {
      */
     public void actionPerformed(ActionEvent event){
         final JFrame window = new JFrame(WINDOW_TITLE);
-        final SettingsPanel settingsPanel = new SettingsPanel(adapter,taskManager);
+        final SettingsPanel settingsPanel = new SettingsPanel();
         window.getContentPane().add(settingsPanel);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.pack();

@@ -21,21 +21,19 @@ public class SettingsPanel extends JPanel {
      * the width of the panel
      */
     private static final int DIM_WIDTH = 550;
-    private final CySwingAppAdapter adapter;
     /**
      * Button to run the Profiler by firing API Request
      */
     private JButton runProfilerButton;
-    private final SynchronousTaskManager<?> taskManager;
     public JTextArea outputTextBox;
     /**
      * Stores path details of file
      */
     private JTextField filePathTextField;
-    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
-        this.adapter = adapter;
+    public SettingsPanel() {
+     //   this.adapter = adapter;
         initialiseJComponents();
-        this.taskManager = taskManager;
+       // this.taskManager = taskManager;
         setPreferredSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
         setOpaque(false);
         // create border.
@@ -84,7 +82,7 @@ public class SettingsPanel extends JPanel {
         // runProfilerButton
         runProfilerButton = new JButton("Run g:Profiler");
         runProfilerButton.setMnemonic(KeyEvent.VK_B);
-        runProfilerButton.addActionListener(new SettingsPanelActionListener(this, adapter,taskManager,false));
+        runProfilerButton.addActionListener(new SettingsPanelActionListener(this,false));
         outputTextBox = new JTextArea("");
         // add a textbox which will display the results of firing a query
 
