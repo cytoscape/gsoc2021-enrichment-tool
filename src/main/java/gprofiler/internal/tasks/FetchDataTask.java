@@ -34,6 +34,7 @@ public final class FetchDataTask implements Task {
         taskCompleted = true;
         return;
     }
+
     private Map<String, String> generateQuery(String query) {
         HashMap<String,String> parameters = new HashMap<>();
         parameters.put("organism","hsapiens");
