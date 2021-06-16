@@ -4,9 +4,7 @@ package gprofiler.internal;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.application.swing.CyAction;
 import org.cytoscape.service.util.AbstractCyActivator;
-import org.cytoscape.work.ServiceProperties;
 import org.cytoscape.work.SynchronousTaskManager;
-import org.cytoscape.work.TaskFactory;
 import org.osgi.framework.BundleContext;
 
 import java.util.Properties;

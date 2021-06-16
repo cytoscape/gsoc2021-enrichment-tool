@@ -1,18 +1,12 @@
 package gprofiler.internal.ui;
 
-import gprofiler.internal.SettingsPanelActionListener;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.work.SynchronousTaskManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
-/**
- * @description Asks users to add the basic Settings for the project: We will assume as many parameters to be default as poosible with minimal room for adjusting preferences
- * This panel allows users to enter data that would then be used along with decisions on running as ordered or multiquery
- */
-public class SettingsPanel extends JPanel {
+public class ResultPanel extends JPanel {
     /**
      * the height of the panel
      */
@@ -21,10 +15,6 @@ public class SettingsPanel extends JPanel {
      * the width of the panel
      */
     private static final int DIM_WIDTH = 550;
-    /**
-     * Button to run the Profiler by firing API Request
-     */
-    private JButton runProfilerButton;
     public JTextArea outputTextBox;
     /**
      * Stores path details of file
@@ -33,7 +23,7 @@ public class SettingsPanel extends JPanel {
     private final CySwingAppAdapter adapter;
     private final SynchronousTaskManager<?> taskManager;
 
-    public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
+    public ResultPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
         this.adapter = adapter;
         initialiseJComponents();
         this.taskManager = taskManager;
@@ -56,7 +46,7 @@ public class SettingsPanel extends JPanel {
         gridBagConstraints.gridx = 0;
         gridBag.setConstraints(dummyPanel, gridBagConstraints);
         add(dummyPanel);
-        
+
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridheight = 1;
         gridBagConstraints.weighty = 1;
@@ -73,34 +63,16 @@ public class SettingsPanel extends JPanel {
         gridBagConstraints.weighty = 100;
         gridBag.setConstraints(outputTextBox, gridBagConstraints);
         add(outputTextBox);
-        gridBag.setConstraints(runProfilerButton,gridBagConstraints);
-        add(runProfilerButton);
     }
 
     /**
      * textOrGraphPanel for choosing between text or graph based input
      */
     private void initialiseJComponents(){
-        // runProfilerButton
-        runProfilerButton = new JButton("Run g:Profiler");
-        runProfilerButton.setMnemonic(KeyEvent.VK_B);
-        outputTextBox = new JTextArea("");
-        runProfilerButton.addActionListener(new SettingsPanelActionListener(this,false,adapter,taskManager));
+        outputTextBox = new JTextArea("API TEst Ran");
     }
     public JTextArea getOutputTextBox(){
         return outputTextBox;
     }
 
-
-    public JButton getRunProfilerButton() {
-        return runProfilerButton;
-    }
-
-    public void setRunProfilerButton(JButton runProfilerButton) {
-        this.runProfilerButton = runProfilerButton;
-    }
-
-    public void setOutputTextBox(JTextArea outputTextBox) {
-        this.outputTextBox = outputTextBox;
-    }
 }

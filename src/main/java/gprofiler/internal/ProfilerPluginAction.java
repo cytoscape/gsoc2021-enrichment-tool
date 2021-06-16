@@ -1,14 +1,12 @@
 package gprofiler.internal;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.JFrame;
-
 import gprofiler.internal.ui.SettingsPanel;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.application.swing.AbstractCyAction;
 import org.cytoscape.work.SynchronousTaskManager;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @description Controls the configuration of the gProfiler Menu in the Cytoscape distribution
@@ -24,6 +22,7 @@ public class ProfilerPluginAction extends AbstractCyAction {
         this.adapter = adapter;
         this.taskManager = taskManager;
         setPreferredMenu(MENU_CATEGORY);
+        String cwd =   System.getProperty("user.home");
     }
 
     /**
@@ -32,7 +31,7 @@ public class ProfilerPluginAction extends AbstractCyAction {
      */
     public void actionPerformed(ActionEvent event){
         final JFrame window = new JFrame(WINDOW_TITLE);
-        final SettingsPanel settingsPanel = new SettingsPanel();
+        final SettingsPanel settingsPanel = new SettingsPanel(adapter,taskManager);
         window.getContentPane().add(settingsPanel);
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         window.pack();
