@@ -30,8 +30,10 @@ public final class FetchDataTask implements Task {
 
     @Override
     public void run(TaskMonitor tMonitor) throws Exception {
-        taskMonitor.setProgress(1.0);
+        taskMonitor.setProgress(-1.0);
+       //perform activity
         taskCompleted = true;
+        taskMonitor.setProgress(1.0);
         return;
     }
 
