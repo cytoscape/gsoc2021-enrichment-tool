@@ -4,8 +4,6 @@ import gprofiler.internal.SettingsPanelActionListener;
 import org.cytoscape.app.swing.CySwingAppAdapter;
 import org.cytoscape.work.SynchronousTaskManager;
 
-import java.util.Properties;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,31 +22,19 @@ public class SettingsPanel extends JPanel {
      */
     private static final int DIM_WIDTH = 550;
     /**
-     * Panel for text or graph input
-     */
-    private TextOrGraphPanel textOrGraphPanel; // need to figure out how to handle it
-
-    private JLabel organismLabel;
-    /**
-     * User enters organism name to this text field
-     */
-    private JTextField organismNameField;
-    private final CySwingAppAdapter adapter;
-    /**
      * Button to run the Profiler by firing API Request
      */
     private JButton runProfilerButton;
-    private final SynchronousTaskManager<?> taskManager;
-
-    private Properties props;
-    //private JLabel filePathLabel;
+    public JTextArea outputTextBox;
     /**
      * Stores path details of file
      */
     private JTextField filePathTextField;
+    private final CySwingAppAdapter adapter;
+    private final SynchronousTaskManager<?> taskManager;
+
     public SettingsPanel(CySwingAppAdapter adapter,final SynchronousTaskManager<?> taskManager) {
         this.adapter = adapter;
-        this.props = new Properties();
         initialiseJComponents();
         this.taskManager = taskManager;
         setPreferredSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
@@ -82,41 +68,39 @@ public class SettingsPanel extends JPanel {
         gridBagConstraints.gridwidth = GridBagConstraints.RELATIVE;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 
-        gridBag.setConstraints(organismLabel, gridBagConstraints);
-        add(organismLabel);
-
-        gridBag.setConstraints(organismNameField, gridBagConstraints);
-        add(organismNameField);
-
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.gridheight = 1;
         gridBagConstraints.weighty = 100;
-        gridBag.setConstraints(textOrGraphPanel, gridBagConstraints);
-        add(textOrGraphPanel);
-
+        gridBag.setConstraints(outputTextBox, gridBagConstraints);
+        add(outputTextBox);
         gridBag.setConstraints(runProfilerButton,gridBagConstraints);
         add(runProfilerButton);
-
     }
 
     /**
      * textOrGraphPanel for choosing between text or graph based input
      */
-    private void initialiseJComponents() {
-        final boolean graph = Boolean.parseBoolean(this.props.getProperty("graph_def", Boolean.toString(true)));
-
-        // TextOrGraphPanel: should be set by default to text input
-        textOrGraphPanel = new TextOrGraphPanel(graph, this.props.getProperty("text_def", ""));
-
-        // JLabels
-        organismLabel = new JLabel("Organism Name: ");
-        organismNameField = new JTextField("");
-
+    private void initialiseJComponents(){
         // runProfilerButton
         runProfilerButton = new JButton("Run g:Profiler");
         runProfilerButton.setMnemonic(KeyEvent.VK_B);
-        runProfilerButton.addActionListener(new SettingsPanelActionListener(this, adapter,taskManager));
+        outputTextBox = new JTextArea("");
+        runProfilerButton.addActionListener(new SettingsPanelActionListener(this,false,adapter,taskManager));
+    }
+    public JTextArea getOutputTextBox(){
+        return outputTextBox;
     }
 
 
+    public JButton getRunProfilerButton() {
+        return runProfilerButton;
+    }
+
+    public void setRunProfilerButton(JButton runProfilerButton) {
+        this.runProfilerButton = runProfilerButton;
+    }
+
+    public void setOutputTextBox(JTextArea outputTextBox) {
+        this.outputTextBox = outputTextBox;
+    }
 }
